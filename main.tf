@@ -1,6 +1,7 @@
 resource "aws_instance" "MyEc2Instance" {
   ami           = var.ami_id
   instance_type = var.instance_type
+  key_name      =  "TerraformKey"
 
   user_data = <<-EOF
               #!/bin/bash
@@ -18,7 +19,6 @@ resource "aws_instance" "MyEc2Instance" {
     connection {
       type        = "ssh"
       user        = "ubuntu"
-      private_key = file("~/.ssh/id_rsa")
       host        = self.public_ip
     }
   }
