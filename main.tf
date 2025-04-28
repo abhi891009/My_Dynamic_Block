@@ -3,7 +3,7 @@ resource "aws_instance" "MyEc2Instance" {
   instance_type = var.instance_type
   key_name      =  "TerraformKey"
   subnet_id     = "subnet-01224d04bf2330624"
-  associate_public_ip_address = true  
+  associate_public_ip_address = true
 
   user_data = <<-EOF
               #!/bin/bash
