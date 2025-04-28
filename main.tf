@@ -4,6 +4,7 @@ resource "aws_instance" "MyEc2Instance" {
   key_name      =  "TerraformKey"
   subnet_id     = "subnet-01224d04bf2330624"
   associate_public_ip_address = true
+  vpc_security_group_ids = ["sg-088afdcc86f830d92"]
 
   user_data = <<-EOF
               #!/bin/bash
