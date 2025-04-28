@@ -1,8 +1,8 @@
 resource "aws_instance" "MyEc2Instance" {
-  ami           = var.ami_id
-  instance_type = var.instance_type
-  key_name      =  "TerraformKey"
-  subnet_id     = "subnet-01224d04bf2330624"
+  ami                    = var.ami_id
+  instance_type          = var.instance_type
+  key_name               = "TerraformKey"
+  subnet_id              = "subnet-01224d04bf2330624"
   associate_public_ip_address = true
   vpc_security_group_ids = ["sg-088afdcc86f830d92"]
 
@@ -16,13 +16,17 @@ resource "aws_instance" "MyEc2Instance" {
     Name = "MyEc2Instance"
   }
 
-  provisioner "remote-exec" {
-    inline = var.commands
-
+provisioner "remote-exec" {
     connection {
       type        = "ssh"
-      user        = "ubuntu"
+      user        = "ec2-user"
+      private_key = file("path/to/your/private-key.pem")
       host        = self.public_ip
+      timeout     = "5m"  # Increase timeout to 5 minutes
     }
+
+    inline = [
+      "echo Hello, World!"
+    ]
   }
 }
