@@ -1,0 +1,34 @@
+name: Terraform
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 1.12.0-beta3
+
+    - name: Initialize Terraform
+      run: terraform init
+
+    - name: Formated the code
+      run: terraform fmt
+
+    - name: Validated the code
+      run: terraform validate
+
+    - name: Checking the plan
+      run: terraform plan
+
+    - name: Apply Terraform
+      run: terraform apply -auto-approve
