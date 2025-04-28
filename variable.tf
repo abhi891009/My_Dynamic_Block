@@ -5,7 +5,7 @@ variable "instance_type" {
 
 variable "ami_id" {
   type    = string
-  default = "ami-084568db4383264d4"
+  default = "ami-084568db4383264d4" 
 }
 
 variable "commands" {

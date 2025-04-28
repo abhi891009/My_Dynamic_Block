@@ -1,39 +1,41 @@
-resource "aws_instance" "MyEc2Instance" {
-  ami                    = var.ami_id
-  instance_type          = var.instance_type
-  key_name               = "TerraformKey"
-  subnet_id              = "subnet-01224d04bf2330624"
-  associate_public_ip_address = true
-  vpc_security_group_ids = ["sg-088afdcc86f830d92"]
+name: Terraform
 
-  user_data = <<-EOF
-              #!/bin/bash
-              sudo apt-get update
-              sudo apt-get install -y apache2
-              EOF
+on:
+  push:
+    branches:
+      - main
 
-  tags = {
-    Name = "MyEc2Instance"
-  }
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
 
-  provisioner "remote-exec" {
-    connection {
-      type        = "ssh"
-      user        = "ec2-user"
-      private_key = file("path/to/your/private-key.pem")
-      host        = self.public_ip
-      timeout     = "5m"  # Increase timeout to 5 minutes
-    }
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-    inline = [
-      "echo Hello, World!"
-    ]
-  }
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
 
-  dynamic "user_data_script" { #block iterates over the commands variable and generates a command block for each item in the list.
-    for_each = var.commands
-    content {           # The content block specifies the structure of the nested block.
-      command = user_data_script.value
-    }
-  }
-}
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 1.12.0-beta3
+
+    - name: Initialize Terraform
+      run: terraform init
+
+    - name: Format the code
+      run: terraform fmt
+
+    - name: Validate the code
+      run: terraform validate
+
+    - name: Check the plan
+      run: terraform plan
+
+    - name: Apply Terraform
+      run: terraform apply -auto-approve

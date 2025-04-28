@@ -16,11 +16,11 @@ resource "aws_instance" "MyEc2Instance" {
     Name = "MyEc2Instance"
   }
 
-  provisioner "remote-exec" {
+provisioner "remote-exec" {
     connection {
       type        = "ssh"
       user        = "ec2-user"
-      private_key = file("path/to/your/private-key.pem")
+      #private_key = file("path/to/your/private-key.pem")
       host        = self.public_ip
       timeout     = "5m"  # Increase timeout to 5 minutes
     }
@@ -28,12 +28,5 @@ resource "aws_instance" "MyEc2Instance" {
     inline = [
       "echo Hello, World!"
     ]
-  }
-
-  dynamic "user_data_script" {
-    for_each = var.commands
-    content {
-      command = user_data_script.value
-    }
   }
 }
