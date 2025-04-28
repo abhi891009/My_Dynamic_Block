@@ -20,7 +20,7 @@ provisioner "remote-exec" {
     connection {
       type        = "ssh"
       user        = "ec2-user"
-      private_key = file("path/to/your/private-key.pem")
+      #private_key = file("path/to/your/private-key.pem")
       host        = self.public_ip
       timeout     = "5m"  # Increase timeout to 5 minutes
     }
