@@ -13,6 +13,13 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
       with:
@@ -21,13 +28,13 @@ jobs:
     - name: Initialize Terraform
       run: terraform init
 
-    - name: Formated the code
+    - name: Format the code
       run: terraform fmt
 
-    - name: Validated the code
+    - name: Validate the code
       run: terraform validate
 
-    - name: Checking the plan
+    - name: Check the plan
       run: terraform plan
 
     - name: Apply Terraform
